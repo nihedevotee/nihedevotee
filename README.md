@@ -1,4 +1,4 @@
-# <div align="center">Younus Mohammad Maheer</div>
+# <div align="center">HEY THERE !!</div>
 
 <div align="center">
   <img src="https://capsule-render.vercel.app/api?type=venom&height=220&color=0:000000,100:a371f7&text=Younus%20Mohammad%20Maheer&fontSize=42&fontColor=FFFFFF&animation=fadeIn&fontAlignY=40&desc=Computer%20Science%20Student%20%7C%20Aspiring%20Developer&descSize=20&descColor=FFFFFF&descAlignY=65" width="100%" alt="Header banner" />
@@ -19,7 +19,7 @@
 
 ## About Me
 
-I am a Computer Science student who enjoys building practical software, learning by shipping projects, and growing across web development and programming fundamentals.
+I am a Computer Science student in brac university who enjoys building practical software, learning by shipping projects, and growing across web development and programming fundamentals.
 
 - Learning and building with JavaScript, Python, Java, and PHP
 - Interested in frontend development, backend logic, and database design
