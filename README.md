@@ -1,7 +1,7 @@
 <div align="center">
 
 <!-- Banner -->
-<img src="https://capsule-render.vercel.app/api?type=venom&height=220&color=0:0d0d0d,100:a371f7&text=Younus%20Mohammad%20Maheer&fontSize=45&fontColor=FFFFFF&animation=fadeIn&fontAlignY=40&desc=Computer%20Science%20Student%20%7C%20Full-Stack%20Learner%20%7C%20Open%20Source%20Enthusiast&descSize=18&descColor=d8b4fe&descAlignY=65" width="100%" />
+<img src="https://capsule-render.vercel.app/api?type=venom&height=220&color=0:0d0d0d,100:a371f7&text=Younus%20Mohammad%20Maheer&fontSize=45&fontColor=FFFFFF&animation=fadeIn&fontAlignY=40&desc=Computer%20Science%20Student
 
 <!-- Profile Views -->
 <a href="https://komarev.com/ghpvc/?username=nihedevotee">
