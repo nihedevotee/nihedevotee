@@ -10,8 +10,6 @@
 
 <!-- Badges -->
 ![CS Student](https://img.shields.io/badge/🎓-CS%20Student-7c3aed?style=flat-square&labelColor=1a0a2e)
-![Web Dev](https://img.shields.io/badge/💻-Web%20Developer-2563eb?style=flat-square&labelColor=0c1a2e)
-![Always Learning](https://img.shields.io/badge/🌱-Always%20Learning-065f46?style=flat-square&labelColor=0a1f18)
 
 </div>
 
