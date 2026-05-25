@@ -36,8 +36,14 @@
 <br>
 <br>
 
-<!-- Badge -->
+<!-- CS Student Badge -->
 <img src="https://img.shields.io/badge/CS%20Student-black?style=flat-square&labelColor=111111&color=f8418b" />
+
+<br>
+<br>
+
+<!-- Stress GIF -->
+<img src="https://i.pinimg.com/originals/ad/fc/cd/adfccd6a72515359c1c283f912b67616.gif" alt="Banner" width="100%" />
 
 </div>
 
@@ -130,13 +136,6 @@
 <br>
 
 ##
-
-<br>
-
-<!-- Bottom GIF -->
-<div align="center">
-  <img src="https://user-images.githubusercontent.com/74038190/212284158-e840e285-664b-44d7-b79b-e264b5e54825.gif" width="100%" />
-</div>
 
 <br>
 
