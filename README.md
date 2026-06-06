@@ -161,11 +161,11 @@ improving problem-solving skills. I hope to regular participate in competitions
 
 ## 🎮 Community Tic-Tac-Toe
 
-Game in progress — it's **X**'s turn!
+Game in progress — it's **O**'s turn!
 
 |   |   |   |
 | - | - | - |
-| [⬜](https://github.com/nihedevotee/nihedevotee/issues/new?title=ttt%7Cmove%7C0&body=Just+click+%27Submit+new+issue%27) | [⬜](https://github.com/nihedevotee/nihedevotee/issues/new?title=ttt%7Cmove%7C1&body=Just+click+%27Submit+new+issue%27) | [⬜](https://github.com/nihedevotee/nihedevotee/issues/new?title=ttt%7Cmove%7C2&body=Just+click+%27Submit+new+issue%27) |
+| [⬜](https://github.com/nihedevotee/nihedevotee/issues/new?title=ttt%7Cmove%7C0&body=Just+click+%27Submit+new+issue%27) | [⬜](https://github.com/nihedevotee/nihedevotee/issues/new?title=ttt%7Cmove%7C1&body=Just+click+%27Submit+new+issue%27) | ❌ |
 | [⬜](https://github.com/nihedevotee/nihedevotee/issues/new?title=ttt%7Cmove%7C3&body=Just+click+%27Submit+new+issue%27) | [⬜](https://github.com/nihedevotee/nihedevotee/issues/new?title=ttt%7Cmove%7C4&body=Just+click+%27Submit+new+issue%27) | [⬜](https://github.com/nihedevotee/nihedevotee/issues/new?title=ttt%7Cmove%7C5&body=Just+click+%27Submit+new+issue%27) |
 | [⬜](https://github.com/nihedevotee/nihedevotee/issues/new?title=ttt%7Cmove%7C6&body=Just+click+%27Submit+new+issue%27) | [⬜](https://github.com/nihedevotee/nihedevotee/issues/new?title=ttt%7Cmove%7C7&body=Just+click+%27Submit+new+issue%27) | [⬜](https://github.com/nihedevotee/nihedevotee/issues/new?title=ttt%7Cmove%7C8&body=Just+click+%27Submit+new+issue%27) |
 
@@ -178,11 +178,13 @@ Game in progress — it's **X**'s turn!
 
 | Move | Who |
 | ---- | --- |
+| Cell 2 (X) | [@nihedevotee](https://github.com/nihedevotee) |
 
 **🏆 Leaderboard (top 20)**
 
 | Moves | Who |
 | ----- | --- |
+| 1 | [@nihedevotee](https://github.com/nihedevotee) |
 
 <!-- TTT_END -->
 
