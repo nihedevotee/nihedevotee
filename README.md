@@ -158,6 +158,32 @@ improving problem-solving skills. I hope to regular participate in competitions
 # Hi there 👋
 
 <!-- TTT_START -->
+
+## 🎮 Community Tic-Tac-Toe
+
+Game in progress — it's **X**'s turn!
+
+|   |   |   |
+| - | - | - |
+| [⬜](https://github.com/nihedevotee/nihedevotee/issues/new?title=ttt%7Cmove%7C0&body=Just+click+%27Submit+new+issue%27) | [⬜](https://github.com/nihedevotee/nihedevotee/issues/new?title=ttt%7Cmove%7C1&body=Just+click+%27Submit+new+issue%27) | [⬜](https://github.com/nihedevotee/nihedevotee/issues/new?title=ttt%7Cmove%7C2&body=Just+click+%27Submit+new+issue%27) |
+| [⬜](https://github.com/nihedevotee/nihedevotee/issues/new?title=ttt%7Cmove%7C3&body=Just+click+%27Submit+new+issue%27) | [⬜](https://github.com/nihedevotee/nihedevotee/issues/new?title=ttt%7Cmove%7C4&body=Just+click+%27Submit+new+issue%27) | [⬜](https://github.com/nihedevotee/nihedevotee/issues/new?title=ttt%7Cmove%7C5&body=Just+click+%27Submit+new+issue%27) |
+| [⬜](https://github.com/nihedevotee/nihedevotee/issues/new?title=ttt%7Cmove%7C6&body=Just+click+%27Submit+new+issue%27) | [⬜](https://github.com/nihedevotee/nihedevotee/issues/new?title=ttt%7Cmove%7C7&body=Just+click+%27Submit+new+issue%27) | [⬜](https://github.com/nihedevotee/nihedevotee/issues/new?title=ttt%7Cmove%7C8&body=Just+click+%27Submit+new+issue%27) |
+
+> **How to play:** Click any ⬜ empty cell above — it opens a GitHub Issue.
+> Just hit **Submit new issue** and the board updates automatically!
+
+[🆕 Start a new game](https://github.com/nihedevotee/nihedevotee/issues/new?title=ttt%7Cnew&body=Just+click+%27Submit+new+issue%27)
+
+**Last few moves**
+
+| Move | Who |
+| ---- | --- |
+
+**🏆 Leaderboard (top 20)**
+
+| Moves | Who |
+| ----- | --- |
+
 <!-- TTT_END -->
 
 <div align="center">
