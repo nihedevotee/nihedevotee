@@ -1,6 +1,6 @@
 name: "Tic-Tac-Toe"
 
-on:
+"on":
   issues:
     types: [opened]
 
