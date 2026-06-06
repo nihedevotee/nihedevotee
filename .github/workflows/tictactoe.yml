@@ -1,1 +1,302 @@
+name: "Tic-Tac-Toe"
 
+on:
+  issues:
+    types: [opened]
+
+concurrency:
+  group: ttt-game
+  cancel-in-progress: false
+
+jobs:
+  move:
+    runs-on: ubuntu-latest
+    if: startsWith(github.event.issue.title, 'ttt|')
+    permissions:
+      contents: write
+      issues: write
+
+    steps:
+      - name: Set env vars
+        run: |
+          echo "REPOSITORY=${{ github.repository }}" >> $GITHUB_ENV
+          echo "EVENT_ISSUE_NUMBER=${{ github.event.issue.number }}" >> $GITHUB_ENV
+          echo "EVENT_USER_LOGIN=${{ github.event.issue.user.login }}" >> $GITHUB_ENV
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.3
+
+      - name: Install gems
+        run: gem install octokit -v 8.1.0 -N --silent
+
+      - name: Play
+        run: |
+          ruby <<- 'EORUBY'
+            require 'octokit'
+            require 'json'
+            require 'fileutils'
+
+            FileUtils.mkdir_p('ttt_games')
+
+            # ─── helpers ────────────────────────────────────────────────
+            @octokit = Octokit::Client.new(
+              access_token: "${{ secrets.GITHUB_TOKEN }}"
+            )
+            REPO       = ENV.fetch('REPOSITORY')
+            ISSUE_NUM  = ENV.fetch('EVENT_ISSUE_NUMBER').to_i
+            USER       = ENV.fetch('EVENT_USER_LOGIN')
+            BOARD_PATH = 'ttt_games/board.json'
+
+            def err(msg, e = nil)
+              @octokit.add_comment(REPO, ISSUE_NUM, msg)
+              @octokit.close_issue(REPO, ISSUE_NUM)
+              puts e.inspect if e
+              exit(0)
+            end
+
+            # ─── parse issue title ───────────────────────────────────────
+            # Format:  ttt|move|<cell>   or   ttt|new
+            parts    = "${{ github.event.issue.title }}".split('|')
+            cmd      = parts[1].to_s.strip   # "new" or "move"
+            cell_raw = parts[2].to_s.strip   # "0".."8"
+
+            unless %w[new move].include?(cmd)
+              err("@#{USER} Unknown command. Use `ttt|new` or `ttt|move|<0-8>`.")
+            end
+            if cmd == 'move' && cell_raw !~ /\A[0-8]\z/
+              err("@#{USER} Invalid cell `#{cell_raw}`. Use a number 0–8.")
+            end
+
+            @octokit.create_issue_reaction(REPO, ISSUE_NUM, 'eyes')
+
+            # ─── load or init board ──────────────────────────────────────
+            # board.json schema:
+            # { "cells": ["","","","","","","","",""], "turn": "X",
+            #   "status": "in_progress" }
+            DEFAULT = { "cells" => Array.new(9,""), "turn" => "X",
+                        "status" => "in_progress" }
+
+            state = if File.exist?(BOARD_PATH)
+                      JSON.parse(File.read(BOARD_PATH))
+                    else
+                      DEFAULT.dup
+                    end
+
+            # ─── new game ────────────────────────────────────────────────
+            if cmd == 'new'
+              state = DEFAULT.dup
+              File.write(BOARD_PATH, state.to_json)
+              File.write('ttt_games/last_mover.txt', '')
+              File.write('ttt_games/recent_moves.txt', '')
+              # don't reset leaderboard on new game
+            end
+
+            # ─── make a move ─────────────────────────────────────────────
+            if cmd == 'move'
+              # Block same-user double-move (mirrors chess logic)
+              last_mover_file = 'ttt_games/last_mover.txt'
+              if File.exist?(last_mover_file)
+                last = File.read(last_mover_file).strip
+                if last == USER
+                  err("@#{USER} Slow down! You just moved — wait for someone else to play.")
+                end
+              end
+
+              if state['status'] != 'in_progress'
+                err("@#{USER} Game is already over. Start a new one with `ttt|new`.")
+              end
+
+              cell = cell_raw.to_i
+
+              if state['cells'][cell] != ''
+                err("@#{USER} Cell #{cell} is already taken! Pick an empty one.")
+              end
+
+              # Apply move
+              state['cells'][cell] = state['turn']
+
+              # ── win / draw detection ──
+              wins = [[0,1,2],[3,4,5],[6,7,8],
+                      [0,3,6],[1,4,7],[2,5,8],
+                      [0,4,8],[2,4,6]]
+
+              winner = nil
+              wins.each do |a,b,c|
+                if state['cells'][a] != '' &&
+                   state['cells'][a] == state['cells'][b] &&
+                   state['cells'][b] == state['cells'][c]
+                  winner = state['cells'][a]
+                  break
+                end
+              end
+
+              if winner
+                state['status'] = "#{winner}_won"
+              elsif state['cells'].none?(&:empty?)
+                state['status'] = 'draw'
+              else
+                state['turn'] = state['turn'] == 'X' ? 'O' : 'X'
+              end
+
+              # Save state
+              File.write(BOARD_PATH, state.to_json)
+              File.write(last_mover_file, USER)
+
+              # Recent moves
+              rm_file = 'ttt_games/recent_moves.txt'
+              symbol  = state['cells'][cell]   # what was just placed
+              new_line = "| Cell #{cell} (#{symbol}) | [@#{USER}](https://github.com/#{USER}) |"
+              existing = File.exist?(rm_file) ? File.readlines(rm_file).map(&:strip).reject(&:empty?) : []
+              File.write(rm_file, ([new_line] + existing[0..3]).join("\n") + "\n")
+
+              # Leaderboard
+              lb_file = 'ttt_games/leaderboard.txt'
+              lines   = File.exist?(lb_file) ? File.readlines(lb_file).map(&:strip).reject(&:empty?) : []
+              found   = false
+              lines.map! do |l|
+                if l.include?("[@#{USER}]")
+                  found = true
+                  l.sub(/\| (\d+) \|/) { "| #{$1.to_i + 1} |" }
+                else
+                  l
+                end
+              end
+              lines << "| 1 | [@#{USER}](https://github.com/#{USER}) |" unless found
+              lines = lines.sort_by { |l| -(l[/\| (\d+) \|/, 1] || '0').to_i }[0..19]
+              File.write(lb_file, lines.join("\n") + "\n")
+
+              if state['status'] != 'in_progress'
+                msg = state['status'] == 'draw' ?
+                  "It's a draw! Thanks for playing." :
+                  "#{state['status'].sub('_won','')} wins! 🎉 Thanks for playing."
+                @octokit.add_comment(REPO, ISSUE_NUM, msg)
+              end
+            end
+
+            # ─── build README section ────────────────────────────────────
+            cells  = state['cells']
+            status = state['status']
+
+            SYMBOLS = { 'X' => '❌', 'O' => '⭕', '' => '⬜' }
+            # For image-based rendering (matches waffle board aesthetic):
+            # IMG = { 'X'=>'x', 'O'=>'o', ''=>'blank' }
+
+            status_text = case status
+                          when 'in_progress' then "Game in progress — it's **#{state['turn']}**'s turn!"
+                          when 'X_won'       then '**X wins!** 🎉 Start a new game below.'
+                          when 'O_won'       then '**O wins!** 🎉 Start a new game below.'
+                          when 'draw'        then "**It's a draw!** Start a new game below."
+                          else 'Game over.'
+                          end
+
+            # Cell layout — 3×3 grid with clickable issue links
+            # Each empty cell is a link to open an issue making that move
+            def cell_link(repo, cell_idx, symbol, turn, game_over)
+              if symbol != ''
+                SYMBOLS[symbol]
+              elsif game_over
+                SYMBOLS['']
+              else
+                url = "https://github.com/#{repo}/issues/new?" \
+                      "title=ttt%7Cmove%7C#{cell_idx}" \
+                      "&body=Just+click+%27Submit+new+issue%27"
+                "[#{SYMBOLS['']}](#{url})"
+              end
+            end
+
+            game_over = status != 'in_progress'
+
+            board_md = <<~MD
+              |   |   |   |
+              | - | - | - |
+            MD
+
+            [0,3,6].each do |row_start|
+              row = (row_start..row_start+2).map do |i|
+                cell_link(REPO, i, cells[i], state['turn'], game_over)
+              end
+              board_md += "| #{row.join(' | ')} |\n"
+            end
+
+            new_game_url = "https://github.com/#{REPO}/issues/new?" \
+                           "title=ttt%7Cnew&body=Just+click+%27Submit+new+issue%27"
+
+            ttt_content = <<~MD
+
+              ## 🎮 Community Tic-Tac-Toe
+
+              #{status_text}
+
+              #{board_md}
+              > **How to play:** Click any ⬜ empty cell above — it opens a GitHub Issue.
+              > Just hit **Submit new issue** and the board updates automatically!
+
+              [🆕 Start a new game](#{new_game_url})
+
+              **Last few moves**
+
+              | Move | Who |
+              | ---- | --- |
+            MD
+
+            rm_file = 'ttt_games/recent_moves.txt'
+            if File.exist?(rm_file)
+              File.readlines(rm_file).map(&:strip).reject(&:empty?)[0..4].each do |l|
+                ttt_content += "#{l}\n"
+              end
+            else
+              ttt_content += "| — | No moves yet |\n"
+            end
+
+            ttt_content += <<~MD
+
+              **🏆 Leaderboard (top 20)**
+
+              | Moves | Who |
+              | ----- | --- |
+            MD
+
+            lb_file = 'ttt_games/leaderboard.txt'
+            if File.exist?(lb_file)
+              File.readlines(lb_file).map(&:strip).reject(&:empty?).each { |l| ttt_content += "#{l}\n" }
+            else
+              ttt_content += "| — | No entries yet |\n"
+            end
+
+            # ─── inject into README ──────────────────────────────────────
+            START_MARKER = '<!-- TTT_START -->'
+            END_MARKER   = '<!-- TTT_END -->'
+
+            readme = File.read('README.md')
+            new_readme = if readme.include?(START_MARKER) && readme.include?(END_MARKER)
+                           readme.sub(
+                             /#{Regexp.escape(START_MARKER)}.*#{Regexp.escape(END_MARKER)}/m,
+                             "#{START_MARKER}\n#{ttt_content}\n#{END_MARKER}"
+                           )
+                         else
+                           readme + "\n\n#{START_MARKER}\n#{ttt_content}\n#{END_MARKER}\n"
+                         end
+
+            File.write('README.md', new_readme)
+
+            # ─── commit & push ───────────────────────────────────────────
+            system('git config --global user.email "action@github.com"')
+            system('git config --global user.name "GitHub Action"')
+            system('git add .')
+            msg = cmd == 'move' ? "#{USER} played cell #{cell_raw}" : "#{USER} started new game"
+            system("git commit -m \"#{msg}\"")
+            system('git push')
+
+            @octokit.add_comment(
+              REPO, ISSUE_NUM,
+              "@#{USER} Done! [View the board](https://github.com/#{REPO})"
+            )
+            @octokit.close_issue(REPO, ISSUE_NUM)
+          EORUBY
