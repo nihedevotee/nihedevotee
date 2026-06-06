@@ -66,8 +66,8 @@
 # 💻 Competitive Programming & Problem Solving
 
 <samp>
-I am a beginner competitive programmer who enjoys solving algorithmic problems,
-improving problem-solving skills, and strengthening my understanding of Data Structures and Algorithms through regular practice.
+I am a beginner competitive programmer who enjoys solving data structure problems and
+improving problem-solving skills. I hope to regular participate in competitions
 </samp>
 
 <br>
