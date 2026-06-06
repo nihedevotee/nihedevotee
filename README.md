@@ -129,19 +129,7 @@ improving problem-solving skills, and strengthening my understanding of Data Str
 <!-- About Me -->
 <div align="center">
 
-# 👨‍💻 About Me
 
-<samp>
-I am a Computer Science student learning web development, programming,
-databases, and AI/ML.
-<br><br>
-I enjoy creating practical projects and improving my coding skills step by step.
-</samp>
-
-</div>
-
-<br>
-<br>
 
 <!-- Contact Me -->
 <div align="center">
